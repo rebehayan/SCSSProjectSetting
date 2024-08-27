@@ -1,127 +1,165 @@
 @use "sass:list";
 @use "../abstract/" as *;
 
-// 전체 input, select, textarea 공통설정
-$formSetting: (
-  "border": 1px solid $black,
-  "height": 4.4rem,
-  "paddingX": 2rem,
-  "backgroudColor": $white,
-  "disalbedBGColor": $black,
-  "readonlyBGColor": $black,
-  "placeholderColor": $black,
+// 폼요소 공통디자인 정의
+$formSettings: (
+  // "key":value,
+  "height": rem(40),
+  "border": rem(1) solid gray,
+  "borderRadius": rem(4),
+  "bgColor": gray,
+  "paddingInline": rem(12),
+  "fontColor": gray,
+  "fontSize": rem(14),
+  "lineHeight": 1,
+  "letterSpacing": rem(-0.5),
+  "placehodlerColor": gray,
+  "disabledBgColor": rgba(gray, 0.1),
+  "readonlyBgColor": rgba(gray, 0.05)
 );
-
-// select 설정
-$select: (
-  "bgImg": "ico_select.svg",
-  "bgColor": $white,
-  "bgPosition": 2rem,
-  "bgSize": 1.2rem,
-  "paddingLeft": 2rem,
+// Select디자인 정의
+$selectSetting: (
+  "bgUrl": "bg_select.svg",
+  "iconPosition": rem(12),
+  "bgWidth": 6,
+  "paddingInline": 12,
 );
-
-// 체크박스, 라디오버튼 공통설정
-$checkboxRadioSetting: (
-  "color": $black,
-  "fontSize": 1.2rem,
-  "gap": 1rem,
-);
-
-// check, radio 생성
-$checkboxRadio: (
+// 라디오 & 체크박스 디자인 정의
+$radioCheckSetting: (
   1: (
-    "class": "checkbox-type1",
-    "offImg": "ico_check_off.svg",
-    "onImg": "ico_check_on.svg",
-    "width": 2.6rem,
-    "height": 2.6rem,
+    "className": ".radio-type1",
+    "offImage": "ico_radio_off.svg",
+    "onImage": "ico_radio_on.svg",
+    "width": rem(24),
+    "height": rem(24),
   ),
   2: (
-    "class": "radio-type1",
-    "offImg": "ico_check_off.svg",
-    "onImg": "ico_check2_on.svg",
-    "width": 1.8rem,
-    "height": 1.8rem,
+    "className": ".check-type1",
+    "offImage": "ico_check_off.svg",
+    "onImage": "ico_check_on.svg",
+    "width": rem(24),
+    "height": rem(24),
   ),
 );
 
-@mixin checkradio($class) {
-  .#{$class} {
-    @extend %label;
+%form {
+  height: map-get($formSettings, height);
+  border: map-get($formSettings, border);
+  box-sizing: border-box;
+  border-radius: map-get($formSettings, borderRadius);
+  background-color: map-get($formSettings, bgColor);
+  padding-inline: map-get($formSettings, paddingInline);
+  color: map-get($formSettings, fontColor);
+  font-size: map-get($formSettings, fontSize);
+  line-height: map-get($formSettings, lineHeight);
+  letter-spacing: map-get($formSettings, letterSpacing);
+  &::placeholder {
+    color: map-get($formSettings, placehodlerColor);
+  }
+  &:disabled {
+    background: map-get($formSettings, disabledBgColor);
+  }
+  &[readonly] {
+    background: map-get($formSettings, readonlyBgColor);
+  }
+}
+
+%label {
+  display: inline-flex;
+  gap: rem(4);
+  align-items: center;
+  color: gray;
+  font-size: rem(12);
+  line-height: 1;
+  letter-spacing: rem(-0.5);
+}
+
+.tel {
+  display: flex;
+  gap: rem(8);
+  > * {
+    flex: 1;
+  }
+}
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(4) rem(10);
+  font-size: 0;
+}
+.address {
+  display: grid;
+  grid-template-columns: 1fr rem(79);
+  gap: rem(4) rem(9);
+  [type="text"] {
+    grid-column: 1/-1;
+  }
+  .btn {
+    font-size: rem(12);
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: rem(-1);
+    padding-inline: 0;
+  }
+}
+
+.input {
+  @extend %form;
+  width: var(--w, 100%);
+}
+
+.select {
+  $result: map-get($selectSetting, paddingInline) * 2 + map-get($selectSetting, bgWidth);
+
+  @extend %form;
+  @include background(map-get($selectSetting, bgUrl), right map-get($selectSetting, iconPosition) center);
+  padding-right: rem($result);
+  appearance: none;
+  width: var(--w, 100%);
+}
+.select-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: rem(4);
+}
+
+.textarea {
+  @extend %form;
+  width: 100%;
+  height: rem(var(--height, 10));
+  padding-block: rem(15);
+  &::placeholder {
+    color: gray;
+    font-family: "Noto Sans KR";
+    font-size: rem(12);
+    line-height: rem(12);
+    letter-spacing: rem(-0.5);
+  }
+}
+
+@mixin Radio($mapName, $index) {
+  #{map-get($mapName, $index, className)} {
+    @include a11y-hidden;
     + label {
+      @extend %label;
+
       &::before {
-        @include background(map-get($checkboxRadio, $class, offImg));
+        @include background(map-get($mapName, $index, offImage));
         content: "";
-        width: map-get($checkboxRadio, $class, width);
-        height: map-get($checkboxRadio, $class, height);
+        width: map-get($mapName, $index, width);
+        height: map-get($mapName, $index, height);
       }
     }
     &:checked {
       + label {
         &::before {
-          @include background(map-get($checkboxRadio, $class, onImg));
+          @include background(map-get($mapName, $index, onImage));
         }
       }
     }
   }
-  .radio-type1 {
-    @extend %label;
-  }
 }
 
-@for $i from 1 through list.length($checkboxRadio) {
-  @include checkradio(map-get($checkboxRadio, $i, class));
-}
-
-%form {
-  border: map-get($formSetting, border);
-  height: map-get($formSetting, height);
-  box-sizing: border-box;
-  padding: 0 map-get($formSetting, paddingX);
-  background-color: map-get($formSetting, backgroudColor);
-  &:disabled {
-    background-color: map-get($formSetting, disalbedBGColor);
-  }
-  &[readonly] {
-    background-color: map-get($formSetting, readonlyBGColor);
-  }
-  &::placeholder {
-    color: map-get($formSetting, placeholderColor);
-  }
-}
-%label {
-  @include a11y-hidden;
-  + label {
-    display: inline-flex;
-    align-items: center;
-    color: map-get($checkboxRadioSetting, color);
-    font-size: map-get($checkboxRadioSetting, fontSize);
-    gap: map-get($checkboxRadioSetting, gap);
-  }
-}
-
-.select {
-  $sum: map-get($select, bgPosition) + map-get($select, bgSize) + map-get($select, paddingLeft);
-
-  @extend %form;
-  @include background(
-    #{map-get($select, bgImg)},
-    right #{map-get($select, bgPosition)} center,
-    #{map-get($select, bgColor)},
-    #{map-get($select, bgSize)} auto
-  );
-  padding: 0 $sum 0 map-get($select, paddingLeft);
-  appearance: none;
-}
-
-.input {
-  @extend %form;
-  min-width: 0;
-  width: var(--width, auto);
-}
-.textarea {
-  @extend %form;
-  width: var(--width);
-  height: var(--height);
+@for $idx from 1 through list.length($radioCheckSetting) {
+  @include Radio($radioCheckSetting, $idx);
 }
