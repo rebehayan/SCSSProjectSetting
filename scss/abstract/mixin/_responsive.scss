@@ -1,0 +1,18 @@
+@use "../var" as *;
+
+@mixin mobileLarge {
+  @media (#{$mobile} < width < #{$tablet}) {
+    @content;
+  }
+}
+
+@mixin Mobile {
+  @media (width < #{$mobileBase}) {
+    @content;
+  }
+}
+@mixin Web {
+  @media (width >= #{$mobileBase}) {
+    @content;
+  }
+}

@@ -1,0 +1,6 @@
+$url: "../images/";
+
+@mixin background($file, $coordinate: null, $color: null, $size: null) {
+  background: url(#{$url}#{$file}) no-repeat $coordinate $color;
+  background-size: $size;
+}

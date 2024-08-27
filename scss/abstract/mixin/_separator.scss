@@ -1,0 +1,22 @@
+@mixin bar($method, $w, $h, $margin, $bg) {
+  display: flex;
+  > li {
+    display: flex;
+    align-items: center;
+    + li {
+      &::before {
+        content: "";
+        margin: 0 $margin;
+        width: $w;
+        height: $h;
+
+        @if $method == "l" or $method == "line" {
+          background-color: $bg;
+        } @else if $method == "bg" or $method == "img" {
+          @include background($bg);
+          background-size: contain;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+@use "../mixin/background" as *;
+
+// 버튼크기정의
+@mixin buttonSize($mapName, $i) {
+  &.#{map-get($mapName, $i, class)} {
+    font-size: map-get($mapName, $i, fontSize);
+    height: map-get($mapName, $i, height);
+    border: map-get($mapName, $i, border) solid;
+    padding: 0 map-get($mapName, $i, padding);
+  }
+}
+// 버튼색상정의
+@mixin buttonColor($mapName, $i) {
+  &.#{map-get($mapName, $i, class)} {
+    border-color: map-get($mapName, $i, borderColor);
+    background-color: map-get($mapName, $i, bgColor);
+    color: map-get($mapName, $i, color);
+  }
+}
+// 버튼아이콘정의
+@mixin btnIcon($mapName, $class) {
+  @include background(map-get($mapName, $class, bgImg), 0 0, null, contain);
+  content: "";
+  width: map-get($mapName, $class, width);
+  height: map-get($mapName, $class, height);
+}
+
+@mixin buttonIcon($mapName, $i) {
+  &.ico#{$i} {
+    @if map-get($mapName, $i, direction) ==
+      "b" or
+      map-get($mapName, $i, direction) ==
+      "before"
+    {
+      &::before {
+        @include btnIcon($mapName, $i);
+      }
+    } @else if
+      map-get($mapName, $i, direction) ==
+      "a" or
+      map-get($mapName, $i, direction) ==
+      "after"
+    {
+      &::after {
+        @include btnIcon($mapName, $i);
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+@use "sass:list";
+@use "../abstract/" as *;
+
+$buttonSize: (
+  1: (
+    "class": base,
+    "fontSize": rem(20),
+    "height": rem(58),
+    "border": 1px,
+    "padding": rem(25),
+  ),
+  2: (
+    "class": lg,
+    "fontSize": rem(28),
+    "height": rem(85),
+    "border": 1px,
+    "padding": rem(12),
+  ),
+);
+$buttonColor: (
+  1: (
+    "class": "white",
+    "borderColor": $white,
+    "bgColor": transparent,
+    "color": $white,
+  ),
+  2: (
+    "class": "black",
+    "borderColor": $gray38,
+    "bgColor": transparent,
+    "color": $gray38,
+  ),
+);
+$buttonIcon: (
+  1: (
+    "direction": a,
+    "width": rem(22),
+    "height": rem(21),
+    "bgImg": "ico_arrow_right.png",
+  ),
+  2: (
+    "direction": a,
+    "width": rem(31),
+    "height": rem(29),
+    "bgImg": "ico_arrow_right.png",
+  ),
+);
+
+@layer Components {
+  @layer Button {
+    .btn {
+      display: inline-grid;
+      grid-template-columns: 1fr min-content;
+      text-align: center;
+      justify-content: center;
+      align-items: center;
+      box-sizing: border-box;
+      text-decoration: none;
+      gap: rem(15);
+
+      @for $i from 1 through list.length($buttonSize) {
+        @include buttonSize($buttonSize, $i);
+      }
+      @for $i from 1 through list.length($buttonColor) {
+        @include buttonColor($buttonColor, $i);
+      }
+      @for $i from 1 through list.length($buttonIcon) {
+        @include buttonIcon($buttonIcon, $i);
+      }
+
+      &.rounded {
+        border-radius: 1000px;
+      }
+      &.mw {
+        min-width: rem(209);
+      }
+    }
+  }
+}

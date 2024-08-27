@@ -1,0 +1,19 @@
+// 스크롤의 방향, 스크롤의 크기, 스크롤 색상, 스크롤 둥근형태
+@mixin scroll($direction, $size, $color, $radius) {
+  &::-webkit-scrollbar {
+    @if $direction == "right" {
+      width: $size;
+    } @else if $direction == "bottom" {
+      height: $size;
+    }
+    background-color: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    width: $size;
+    background-color: $color;
+    border-radius: $radius;
+  }
+  &::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}
